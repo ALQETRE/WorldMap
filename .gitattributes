@@ -1,0 +1,2 @@
+map.kra filter=lfs diff=lfs merge=lfs -text
+Wetlands/wetlands_map.kra filter=lfs diff=lfs merge=lfs -text
