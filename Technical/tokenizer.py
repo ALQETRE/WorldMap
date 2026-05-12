@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 
 main_dir = Path("..")
 wetland_dir = Path("../Welands")
@@ -22,22 +23,18 @@ def get_tokens(dir):
         if file.is_file():
             if file._raw_path == token_file:
                 continue
+            if ".obsidian" in file.parts:
+                continue
             text = file.read_text(encoding="utf-8")
-            text = text.split()
-            for word in text:
-                if "{" in word:
-                    start_idx = word.index("{")
-                    end_idx = word.index("}")
-
-                    token = word[start_idx+1:end_idx]
-
-                    if not token in tokens.keys() and not "\\*" + token in tokens.keys():
-                        tokens[token] = "-"
-                    else:
-                        if "\\*" + token in tokens.keys():
-                            value = tokens["\\*" + token]
-                            del tokens["\\*" + token]
-                            tokens[token] = value
+            
+            for token in re.findall(r"\{(\w+)\}", text):
+                if not token in tokens.keys() and not "\\*" + token in tokens.keys():
+                    tokens[token] = "-"
+                else:
+                    if "\\*" + token in tokens.keys():
+                        value = tokens["\\*" + token]
+                        del tokens["\\*" + token]
+                        tokens[token] = value
     write_tokens()
 
 def read_tokens():

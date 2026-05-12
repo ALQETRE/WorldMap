@@ -1,5 +1,5 @@
 ---
-god: false
+god: true
 tags:
   - race
 aliases:

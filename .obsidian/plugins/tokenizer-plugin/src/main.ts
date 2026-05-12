@@ -1,99 +1,138 @@
-import {App, Editor, MarkdownView, Modal, Notice, Plugin} from 'obsidian';
-import {DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab} from "./settings";
+import { Plugin, TFile, MarkdownView } from "obsidian";
+import { ViewPlugin, DecorationSet, Decoration, ViewUpdate, WidgetType } from "@codemirror/view";
+import { RangeSetBuilder } from "@codemirror/state";
 
-// Remember to rename these classes and interfaces!
-
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
-
-	async onload() {
-		await this.loadSettings();
-
-		// This creates an icon in the left ribbon.
-		this.addRibbonIcon('dice', 'Sample', (evt: MouseEvent) => {
-			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
-		});
-
-		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-		const statusBarItemEl = this.addStatusBarItem();
-		statusBarItemEl.setText('Status bar text');
-
-		// This adds a simple command that can be triggered anywhere
-		this.addCommand({
-			id: 'open-modal-simple',
-			name: 'Open modal (simple)',
-			callback: () => {
-				new SampleModal(this.app).open();
-			}
-		});
-		// This adds an editor command that can perform some operation on the current editor instance
-		this.addCommand({
-			id: 'replace-selected',
-			name: 'Replace selected content',
-			editorCallback: (editor: Editor, view: MarkdownView) => {
-				editor.replaceSelection('Sample editor command');
-			}
-		});
-		// This adds a complex command that can check whether the current state of the app allows execution of the command
-		this.addCommand({
-			id: 'open-modal-complex',
-			name: 'Open modal (complex)',
-			checkCallback: (checking: boolean) => {
-				// Conditions to check
-				const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-				if (markdownView) {
-					// If checking is true, we're simply "checking" if the command can be run.
-					// If checking is false, then we want to actually perform the operation.
-					if (!checking) {
-						new SampleModal(this.app).open();
-					}
-
-					// This command will only show up in Command Palette when the check function returns true
-					return true;
-				}
-				return false;
-			}
-		});
-
-		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new SampleSettingTab(this.app, this));
-
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
-		// Using this function will automatically remove the event listener when this plugin is disabled.
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			new Notice("Click");
-		});
-
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
-
-	}
-
-	onunload() {
-	}
-
-	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData() as Partial<MyPluginSettings>);
-	}
-
-	async saveSettings() {
-		await this.saveData(this.settings);
-	}
+class TokenWidget extends WidgetType {
+    constructor(private value: string) { super(); }
+    toDOM() {
+        const span = document.createElement("span");
+        span.textContent = this.value;
+        return span;
+    }
 }
 
-class SampleModal extends Modal {
-	constructor(app: App) {
-		super(app);
+function buildTokenPlugin(getTokens: () => Record<string, string>) {
+    return ViewPlugin.fromClass(class {
+        decorations: DecorationSet;
+
+        constructor(view: any) {
+            this.decorations = this.buildDecorations(view);
+        }
+
+		update(update: ViewUpdate) {
+			if (update.docChanged || update.viewportChanged || update.selectionSet)
+				this.decorations = this.buildDecorations(update.view);
+		}
+
+		buildDecorations(view: any): DecorationSet {
+			const builder = new RangeSetBuilder<Decoration>();
+			const tokens = getTokens();
+			const cursor = view.state.selection.main.head;
+
+			for (const { from, to } of view.visibleRanges) {
+				const text = view.state.doc.sliceString(from, to);
+				const regex = /\{(\w+)\}/g;
+				let match;
+				while ((match = regex.exec(text)) !== null) {
+					const key = match[1] as string;
+					if (!(key in tokens)) continue;
+					const start = from + match.index;
+					const end = start + match[0].length;
+					if (cursor >= start && cursor <= end) continue; // skip if cursor is inside
+					builder.add(start, end, Decoration.replace({
+						widget: new TokenWidget(tokens[key]!)
+					}));
+				}
+			}
+			return builder.finish();
+		}
+    }, { decorations: v => v.decorations });
+}
+
+export default class Tokenizer extends Plugin {
+	tokens: Record<string, string> = {};
+
+
+    async onload() {
+		this.registerEditorExtension(buildTokenPlugin(() => this.tokens));
+		
+		this.app.workspace.onLayoutReady(async () => {
+			await this.loadTokens();
+			this.refreshViews();
+		});
+
+        this.registerEvent(
+            this.app.vault.on("modify", async (file) => {
+                if (file.path === "TOKENS.md") {
+					await this.loadTokens();
+					this.refreshViews();
+				}
+				else {
+					let newTokensAdded = false;
+					const text = await this.app.vault.read(file as TFile);
+					for (const newToken of text.matchAll(/\{(\w+)\}/g)) {
+						if (newToken[1]! in this.tokens) continue;
+						this.tokens[newToken[1]!] = "-";
+						newTokensAdded = true;
+					}
+					if (newTokensAdded) {
+						await this.saveTokens();
+					}
+				}
+            })
+        );
+
+        this.registerMarkdownPostProcessor((element, context) => {
+			element.querySelectorAll("*").forEach((node) => {
+				node.childNodes.forEach((child) => {
+					if (child.nodeType !== Node.TEXT_NODE) return;
+					let text = child.textContent ?? "";
+					for (const [key, value] of Object.entries(this.tokens)) {
+						text = text.replaceAll(`{${key}}`, value);
+					}
+					child.textContent = text;
+				});
+			});
+		});
+    }
+    onunload() {
+        // runs when plugin is disabled — cleanup
+    }
+
+	async loadTokens() {
+		console.log("LOADED TOKENS")
+		const file = this.app.vault.getAbstractFileByPath("TOKENS.md") as TFile;
+		if (!file) return;
+		const text = await this.app.vault.read(file);
+		console.log("text:", text);
+		this.tokens = {};
+		for (const token of text.split("\n")) {
+			const [key, ...values] = token.split(":");
+			if (key && values.length) {
+				this.tokens[key.trim()] = values.join(":").trim();
+			}
+		}
 	}
 
-	onOpen() {
-		let {contentEl} = this;
-		contentEl.setText('Woah!');
+	async saveTokens() {
+		const file = this.app.vault.getAbstractFileByPath("TOKENS.md") as TFile;
+		const content = Object.entries(this.tokens)
+			.map(([key, val]) => `${key} : ${val}`)
+			.join("\n");
+				if (!file) return;
+
+		if (file) {
+			await this.app.vault.modify(file, content);
+		} else {
+			await this.app.vault.create("TOKENS.md", content);
+		}
 	}
 
-	onClose() {
-		const {contentEl} = this;
-		contentEl.empty();
+	refreshViews() {
+		this.app.workspace.iterateAllLeaves((leaf) => {
+			if (leaf.view.getViewType() === "markdown") {
+				(leaf.view as MarkdownView).previewMode.rerender(true);
+			}
+		});
 	}
 }

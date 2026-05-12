@@ -1,6 +1,7 @@
 ---
-biome:
+biome: "[[South Wetlands]]"
 races:
+  - "[[Begets]]"
 Inhabited: true
 tags:
   - place

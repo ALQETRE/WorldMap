@@ -6,6 +6,10 @@
     "places": "multitext",
     "race": "text",
     "races": "multitext",
-    "Inhabited": "checkbox"
+    "Inhabited": "checkbox",
+    "god": "checkbox",
+    "surface": "checkbox",
+    "surface-biom": "checkbox",
+    "water-biom": "checkbox"
   }
 }
