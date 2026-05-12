@@ -1,0 +1,11 @@
+{
+  "types": {
+    "aliases": "aliases",
+    "cssclasses": "multitext",
+    "tags": "tags",
+    "places": "multitext",
+    "race": "text",
+    "races": "multitext",
+    "Inhabited": "checkbox"
+  }
+}

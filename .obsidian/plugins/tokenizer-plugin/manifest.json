@@ -1,0 +1,11 @@
+{
+	"id": "tokenizer-plugin",
+	"name": "Tokenizer",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Addes support for tokens, so you can write and think later.",
+	"author": "ALQETRE",
+	"authorUrl": "https://github.com/ALQETRE",
+	"fundingUrl": "https://github.com/ALQETRE",
+	"isDesktopOnly": true
+}
