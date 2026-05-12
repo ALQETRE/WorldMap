@@ -1,5 +1,5 @@
 ---
-type: river
+type: waterfalls
 tags:
   - naturalplace
 aliases:

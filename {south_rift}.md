@@ -1,5 +1,5 @@
 ---
-type: river
+type: rift
 tags:
   - naturalplace
 aliases:

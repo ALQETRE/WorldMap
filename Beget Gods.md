@@ -1,5 +1,6 @@
 ---
 god: true
+super-race: "[[Begets]]"
 tags:
   - race
 aliases:

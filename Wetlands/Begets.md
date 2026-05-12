@@ -1,5 +1,6 @@
 ---
 god: false
+super-race:
 tags:
   - race
 aliases:
