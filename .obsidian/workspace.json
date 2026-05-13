@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "841423700074ecd1",
+        "id": "ea09575c2c26384a",
         "type": "tabs",
         "children": [
           {
-            "id": "55c47f1fb90b8770",
+            "id": "8358210800f0b6e7",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -49,7 +49,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#race  ",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -70,8 +70,7 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -84,7 +83,7 @@
       {
         "id": "a2f0d126a22628d9",
         "type": "tabs",
-        "dimension": 54.890219560878236,
+        "dimension": 54.89021956087824,
         "children": [
           {
             "id": "1902f7b3e9172703",
@@ -130,9 +129,19 @@
               "icon": "lucide-list",
               "title": "Outline"
             }
+          },
+          {
+            "id": "899054eb870a4730",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       },
       {
         "id": "f136225fe99689fd",
@@ -217,24 +226,27 @@
       "bases:Create new base": false,
       "templates:Insert template": false,
       "obsidian-excalidraw-plugin:New drawing": false,
-      "obsidian-shellcommands:Shell commands: Custom variables": false
+      "obsidian-shellcommands:Shell commands: Custom variables": false,
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "55c47f1fb90b8770",
+  "active": "8358210800f0b6e7",
   "lastOpenFiles": [
-    "South Wetlands.md",
-    "Wetlands/Begets.md",
-    "Beget Gods.md",
-    "Templates/Race.md",
-    "{beget_god_of_water}.md",
-    "Wetlands/Tales/FallenKing.md",
-    "{wetland_nation}.md",
-    "{south_rift}.md",
-    "{south_river}.md",
-    "{south_waterfalls}.md",
-    "TOKENS.md",
-    "{woodcutter}.md",
+    "South/Wetlands/{woodcutter}.md",
+    "South/Wetlands/{beget_god_of_water}.md",
+    "South/Wetlands/Beget Gods.md",
+    "South/{south_rift}.md",
+    "South/{south_river}.md",
+    "South/Wetlands/{wetland_nation}.md",
+    "South/{south_waterfalls}.md",
     "map.png",
+    "South",
+    "South/Wetlands/FallenKing.md",
+    "Wetlands/Tales",
+    "South/Wetlands/South Wetlands.md",
+    "South/Wetlands/Begets.md",
+    "Templates/Race.md",
+    "TOKENS.md",
     "map-biomes.png",
     "Templates/Place.md",
     "Templates/NaturalPlace.md",
@@ -243,7 +255,6 @@
     "Templates/Character.md",
     "Wetlands/Resources and Industries.md",
     "Wetlands/Biodiversity.md",
-    "Wetlands/{wetland_nation}.md",
     "tokenizer-plugin/node_modules/yocto-queue/readme.md",
     "tokenizer-plugin/node_modules/yocto-queue/package.json",
     "tokenizer-plugin/node_modules/yocto-queue/license",
@@ -253,12 +264,9 @@
     "tokenizer-plugin/node_modules/yaml-eslint-parser/package.json",
     "tokenizer-plugin/node_modules/yaml-eslint-parser/node_modules",
     "tokenizer-plugin/node_modules/yaml-eslint-parser/LICENSE",
-    "tokenizer-plugin/node_modules/yaml-eslint-parser/lib",
-    "tokenizer-plugin/node_modules/yaml/util.js",
     "tokenizer-plugin/node_modules/yaml/README.md",
     "tokenizer-plugin/node_modules/word-wrap/README.md",
     "tokenizer-plugin/node_modules/which-typed-array/README.md",
-    "tokenizer-plugin/node_modules/which-typed-array/CHANGELOG.md",
-    "tokenizer-plugin/node_modules/which-collection/README.md"
+    "tokenizer-plugin/node_modules/which-typed-array/CHANGELOG.md"
   ]
 }

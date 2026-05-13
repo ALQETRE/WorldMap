@@ -7,37 +7,27 @@
         {
           "type": "file",
           "ctime": 1778615923409,
-          "path": "{woodcutter}.md"
-        },
-        {
-          "type": "file",
-          "ctime": 1778615927556,
-          "path": "{wetland_nation}.md"
+          "path": "South/Wetlands/{woodcutter}.md"
         },
         {
           "type": "file",
           "ctime": 1778616010996,
-          "path": "{beget_god_of_water}.md"
+          "path": "South/Wetlands/{beget_god_of_water}.md"
         },
         {
           "type": "file",
           "ctime": 1778616121291,
-          "path": "Beget Gods.md"
+          "path": "South/Wetlands/Beget Gods.md"
         },
         {
           "type": "file",
           "ctime": 1778616569166,
-          "path": "{south_river}.md"
-        },
-        {
-          "type": "file",
-          "ctime": 1778617376988,
-          "path": "{south_waterfalls}.md"
+          "path": "South/{south_river}.md"
         },
         {
           "type": "file",
           "ctime": 1778617384277,
-          "path": "{south_rift}.md"
+          "path": "South/{south_rift}.md"
         }
       ],
       "title": "Not done"
